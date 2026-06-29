@@ -17,3 +17,11 @@ export function Card({
 export function CardTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-lg font-semibold text-slate-900">{children}</h3>;
 }
+
+export function CardContent({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <div className={cn("p-6 pt-0", className)}>
+      {children}
+    </div>
+  );
+}
