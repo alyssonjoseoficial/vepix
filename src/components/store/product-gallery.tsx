@@ -9,7 +9,7 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
-  const [mainImage, setMainImage] = useState(images[0] || null);
+  const [mainImage, setMainImage] = useState(images[0] || "");
 
   if (!images || images.length === 0) {
     return (
