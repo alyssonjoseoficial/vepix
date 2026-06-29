@@ -52,7 +52,7 @@ export async function getFinancialMetrics() {
 }
 
 // Action para popular banco com dados fictícios para vermos no painel
-export async function seedDummyInvoices() {
+export async function seedDummyInvoices(formData?: FormData) {
   await requirePlatformAdmin();
 
   // Deletar faturas antigas
@@ -122,5 +122,4 @@ export async function seedDummyInvoices() {
   }
 
   revalidatePath("/admin/finance");
-  return { success: true };
 }
