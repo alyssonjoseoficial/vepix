@@ -1,0 +1,21 @@
+Chave key IA
+[REMOVIDO_POR_SEGURANCA]
+
+
+Servidor:
+npm run dev
+
+landing page: http://localhost:3000/
+
+
+Superadmin:
+usuário: superadmin@storeflow.com
+Senha: 123456
+
+
+loja: tonho@gmail.com
+      123456
+
+
+
+IMPORTANTE: No fim do projeto: Colocar para que quando o cliente acessar a primeira vez baixe para seu celular como se fosse um app.
