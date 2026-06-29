@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { requirePlatformAdmin } from "@/lib/admin";
 import { getFinancialMetrics, seedDummyInvoices } from "@/lib/actions/finance";
 import { prisma } from "@/lib/prisma";
-import { Card, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import { TrendingUp, CheckCircle, AlertTriangle, UserX, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
