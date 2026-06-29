@@ -58,7 +58,7 @@ Retorne ÚNICA e EXCLUSIVAMENTE um array JSON contendo os 4 IDs selecionados. Ex
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
     // Extrai o JSON da resposta
-    const jsonMatch = text.match(/\[.*\]/s);
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
     if (jsonMatch) {
       const ids = JSON.parse(jsonMatch[0]);
       if (Array.isArray(ids)) return ids;
