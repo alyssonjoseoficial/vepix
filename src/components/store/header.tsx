@@ -21,7 +21,7 @@ export function StoreHeader({
     >
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
         {/* Lado Esquerdo: Logo */}
-        <Link href={`/loja/${store.slug}`} className="flex shrink-0 items-center gap-3 text-white">
+        <Link href={`/${store.slug}`} className="flex shrink-0 items-center gap-3 text-white">
           {store.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={store.logoUrl} alt={store.name} className="h-10 w-10 rounded-full object-cover" />
@@ -35,7 +35,7 @@ export function StoreHeader({
 
         {/* Centro: Barra de Busca */}
         <form 
-          action={`/loja/${store.slug}`} 
+          action={`/${store.slug}`} 
           method="GET"
           className="order-3 flex w-full flex-1 items-center md:order-2 md:max-w-xl"
         >

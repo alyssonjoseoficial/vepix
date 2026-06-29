@@ -140,7 +140,7 @@ export default async function OrderSuccessPage({
           </p>
         </div>
 
-        <Link href={`/loja/${slug}`}>
+        <Link href={`/${slug}`}>
           <Button className="mt-8">Voltar à loja</Button>
         </Link>
       </div>

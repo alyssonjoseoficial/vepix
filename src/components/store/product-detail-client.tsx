@@ -41,7 +41,7 @@ export function ProductDetailClient({
       },
       quantity,
     );
-    router.push(`/loja/${storeSlug}/carrinho`);
+    router.push(`/${storeSlug}/carrinho`);
   }
 
   function handleCalculateShipping() {

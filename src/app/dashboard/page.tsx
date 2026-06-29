@@ -83,7 +83,7 @@ export default async function DashboardPage() {
         <h1 className="text-3xl font-bold text-slate-900">Visão geral</h1>
         <p className="mt-2 text-slate-500">
           Bem-vindo de volta. Sua loja está no ar em{" "}
-          <strong>/loja/{tenant.slug}</strong>
+          <strong>/{tenant.slug}</strong>
         </p>
       </div>
 

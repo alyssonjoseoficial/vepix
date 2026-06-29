@@ -59,8 +59,8 @@ export default async function AdminTenantDetailPage({ params }: { params: Promis
               </div>
               <div>
                 <p className="text-slate-500 mb-1">Link de Acesso</p>
-                <a href={`/loja/${tenant.slug}`} target="_blank" rel="noreferrer" className="font-medium text-blue-600 hover:underline">
-                  /loja/{tenant.slug}
+                <a href={`/${tenant.slug}`} target="_blank" rel="noreferrer" className="font-medium text-blue-600 hover:underline">
+                  /{tenant.slug}
                 </a>
               </div>
               <div>

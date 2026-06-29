@@ -79,7 +79,7 @@ export default async function SuperAdminDashboard() {
                 recentTenants.map((t) => (
                   <tr key={t.id} className="border-b border-slate-100">
                     <td className="py-3 pr-4 font-medium">{t.name}</td>
-                    <td className="py-3 pr-4">/loja/{t.slug}</td>
+                    <td className="py-3 pr-4">/{t.slug}</td>
                     <td className="py-3 pr-4">{t.subscription?.plan?.name || "Sem Plano"}</td>
                     <td className="py-3 pr-4">
                       {t.active ? (

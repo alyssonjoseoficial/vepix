@@ -28,6 +28,11 @@ export async function registerStore(formData: FormData) {
     return { error: "Este e-mail já está cadastrado." };
   }
 
+  const reservedWords = ["login", "register", "admin", "admin-login", "dashboard", "api", "loja", "pricing", "_next", "static", "public"];
+  if (reservedWords.includes(storeSlug)) {
+    return { error: "Este endereço da loja é reservado pelo sistema. Escolha outro." };
+  }
+
   const existingSlug = await prisma.tenant.findUnique({ where: { slug: storeSlug } });
   if (existingSlug) {
     return { error: "Este endereço da loja já está em uso. Escolha outro." };

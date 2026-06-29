@@ -45,12 +45,12 @@ export function ProductCard({
       },
       1
     );
-    router.push(`/loja/${storeSlug}/carrinho`);
+    router.push(`/${storeSlug}/carrinho`);
   };
 
   return (
     <Link
-      href={`/loja/${storeSlug}/produto/${product.id}`}
+      href={`/${storeSlug}/produto/${product.id}`}
       className="group relative flex flex-col overflow-hidden bg-white transition-all duration-200 border border-slate-100 hover:border-slate-300 hover:shadow-md h-full"
     >
       <div className="relative aspect-square w-full overflow-hidden bg-slate-50">

@@ -86,8 +86,8 @@ export default async function AdminTenantsPage({
                   <tr key={tenant.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-semibold text-slate-900">{tenant.name}</div>
-                      <a href={`/loja/${tenant.slug}`} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">
-                        /loja/{tenant.slug}
+                      <a href={`/${tenant.slug}`} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">
+                        /{tenant.slug}
                       </a>
                     </td>
                     <td className="px-6 py-4">

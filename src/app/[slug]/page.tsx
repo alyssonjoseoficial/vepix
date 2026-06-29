@@ -132,7 +132,7 @@ export default async function StorePage({
             <div className="bg-white rounded-md p-4 shadow-sm">
               <div className="flex space-x-6 overflow-x-auto scrollbar-hide pb-2 snap-x">
                 <Link
-                  href={`/loja/${tenant.slug}`}
+                  href={`/${tenant.slug}`}
                   className="flex flex-col items-center gap-2 min-w-[70px] snap-start group"
                 >
                   <div className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform group-hover:-translate-y-1 ${!selectedCategoryId ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'}`}>
@@ -147,7 +147,7 @@ export default async function StorePage({
                   return (
                     <Link
                       key={cat.id}
-                      href={`/loja/${tenant.slug}?categoria=${cat.id}`}
+                      href={`/${tenant.slug}?categoria=${cat.id}`}
                       className="flex flex-col items-center gap-2 min-w-[70px] snap-start group"
                     >
                       <div className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform group-hover:-translate-y-1 ${isSelected ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'}`}>
@@ -237,7 +237,7 @@ export default async function StorePage({
               {isSearching ? <SearchX className="h-12 w-12 text-slate-300 mb-2" /> : <ShoppingBag className="h-12 w-12 text-slate-300 mb-2" />}
               <h3 className="text-sm font-bold text-slate-700">Nenhum produto encontrado</h3>
               {(selectedCategoryId || isSearching || isFreeShipping) && (
-                <Link href={`/loja/${tenant.slug}`} className="mt-4">
+                <Link href={`/${tenant.slug}`} className="mt-4">
                   <button className="rounded-sm bg-[#ee4d2d] px-6 py-2 text-sm font-bold text-white transition hover:opacity-90">
                     Limpar filtros
                   </button>

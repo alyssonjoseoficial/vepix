@@ -9,7 +9,7 @@ export function HeaderCartButton({ storeSlug }: { storeSlug: string }) {
 
   return (
     <Link
-      href={`/loja/${storeSlug}/carrinho`}
+      href={`/${storeSlug}/carrinho`}
       className="relative flex h-10 items-center gap-2 rounded-full bg-white/15 px-4 text-sm font-medium text-white transition hover:bg-white/25"
     >
       <ShoppingCart className="h-5 w-5" />

@@ -53,7 +53,7 @@ export function DashboardSidebar({
           <h2 className="truncate text-base font-bold text-slate-900" title={storeName}>{storeName}</h2>
         </div>
         <Link
-          href={`/loja/${storeSlug}`}
+          href={`/${storeSlug}`}
           target="_blank"
           className="mt-4 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition-colors"
         >

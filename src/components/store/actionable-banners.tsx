@@ -41,7 +41,7 @@ export function ActionableBanners({ settings, storeSlug }: ActionableBannersProp
 
   const handleBanner1Click = () => {
     // Redirect to free shipping products
-    router.push(`/loja/${storeSlug}?freteGratis=true`);
+    router.push(`/${storeSlug}?freteGratis=true`);
   };
 
   const handleBanner2Click = () => {

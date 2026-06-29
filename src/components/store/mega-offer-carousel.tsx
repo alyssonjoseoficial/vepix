@@ -47,7 +47,7 @@ export function MegaOfferCarousel({ products, tenantName, primaryColor, secondar
             <br /> {tenantName}
           </h1>
           <p className="mt-1 text-sm text-white/90 font-medium">Aproveite enquanto durarem os estoques</p>
-          <a href={`/loja/${storeSlug}`} className="mt-4 inline-flex items-center gap-1 bg-white px-4 py-1.5 text-sm font-bold text-[#ee4d2d] rounded-full shadow-md hover:bg-slate-100 transition">
+          <a href={`/${storeSlug}`} className="mt-4 inline-flex items-center gap-1 bg-white px-4 py-1.5 text-sm font-bold text-[#ee4d2d] rounded-full shadow-md hover:bg-slate-100 transition">
             Compre agora <ArrowRight className="h-4 w-4" />
           </a>
         </div>
@@ -73,7 +73,7 @@ export function MegaOfferCarousel({ products, tenantName, primaryColor, secondar
         <p className="mt-1 text-xl md:text-2xl font-bold text-white/90">
           R$ {currentProduct.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
-        <a href={`/loja/${storeSlug}/produto/${currentProduct.id}`} className="mt-4 inline-flex items-center gap-1 bg-white px-4 py-1.5 text-sm font-bold text-slate-900 rounded-full shadow-md hover:bg-slate-100 transition">
+        <a href={`/${storeSlug}/produto/${currentProduct.id}`} className="mt-4 inline-flex items-center gap-1 bg-white px-4 py-1.5 text-sm font-bold text-slate-900 rounded-full shadow-md hover:bg-slate-100 transition">
           Ver detalhes <ArrowRight className="h-4 w-4" />
         </a>
 

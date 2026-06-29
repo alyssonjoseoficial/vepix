@@ -113,6 +113,11 @@ export async function createTenantManually(formData: FormData) {
 
   const storeSlug = slugify(storeName);
 
+  const reservedWords = ["login", "register", "admin", "admin-login", "dashboard", "api", "loja", "pricing", "_next", "static", "public"];
+  if (reservedWords.includes(storeSlug)) {
+    return { error: "Este endereço da loja é reservado pelo sistema. Escolha outro." };
+  }
+
   const existingSlug = await prisma.tenant.findUnique({ where: { slug: storeSlug } });
   if (existingSlug) {
     return { error: "O nome dessa loja já está em uso na plataforma. Escolha outro ou adicione um diferencial." };

@@ -56,7 +56,7 @@ export function RegisterForm({ plans, defaultPlanId }: { plans: any[], defaultPl
       <div>
         <Label htmlFor="storeSlug">Endereço da loja</Label>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">/loja/</span>
+          <span className="text-sm text-slate-500">/<//span>
           <Input id="storeSlug" name="storeSlug" placeholder="minha-loja" required />
         </div>
       </div>

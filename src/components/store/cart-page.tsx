@@ -44,7 +44,7 @@ function CartContent({ slug, store }: { slug: string; store: any }) {
       {items.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-dashed border-slate-200 p-10 text-center">
           <p className="text-slate-500">Seu carrinho está vazio.</p>
-          <Link href={`/loja/${slug}`}>
+          <Link href={`/${slug}`}>
             <Button className="mt-4">Continuar comprando</Button>
           </Link>
         </div>
@@ -98,12 +98,12 @@ function CartContent({ slug, store }: { slug: string; store: any }) {
           <FreeShippingProgress minAmount={store?.settings?.freeShippingMinAmount} />
           
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <Link href={`/loja/${slug}`} className="flex-1">
+            <Link href={`/${slug}`} className="flex-1">
               <Button size="lg" variant="outline" className="w-full gap-2 border-slate-300 text-slate-700">
                 <ArrowLeft className="h-4 w-4" /> Continuar comprando
               </Button>
             </Link>
-            <Link href={`/loja/${slug}/checkout`} className="flex-1">
+            <Link href={`/${slug}/checkout`} className="flex-1">
               <Button size="lg" className="w-full" style={{ backgroundColor: store?.primaryColor }}>
                 Finalizar compra
               </Button>

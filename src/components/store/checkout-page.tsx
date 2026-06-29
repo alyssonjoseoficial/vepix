@@ -115,14 +115,14 @@ function CheckoutForm({
     }
 
     clearCart();
-    router.push(`/loja/${slug}/pedido/${result.orderId}`);
+    router.push(`/${slug}/pedido/${result.orderId}`);
   }
 
   if (!items.length) {
     return (
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
         <p className="text-slate-500">Carrinho vazio.</p>
-        <Link href={`/loja/${slug}`}>
+        <Link href={`/${slug}`}>
           <Button className="mt-4">Voltar à loja</Button>
         </Link>
       </div>
