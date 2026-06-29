@@ -114,7 +114,7 @@ export async function updateCoupon(id: string, data: any) {
   }
 }
 
-export async function deleteCoupon(id: string) {
+export async function deleteCoupon(id: string, formData?: FormData) {
   try {
     const { tenant } = await requireTenantAccess();
     const tenantId = tenant.id;
@@ -123,9 +123,7 @@ export async function deleteCoupon(id: string) {
       where: { id, tenantId },
     });
     revalidatePath("/dashboard/coupons");
-    return { success: true };
   } catch (error) {
     console.error(error);
-    return { error: "Erro ao excluir cupom." };
   }
 }
