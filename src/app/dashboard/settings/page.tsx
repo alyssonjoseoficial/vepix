@@ -4,6 +4,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { BannerSettingsFields } from "@/components/dashboard/banner-settings-fields";
+import { SubmitButton } from "./submit-button";
 
 export default async function SettingsPage() {
   const { tenant } = await requireTenantAccess();
@@ -103,11 +104,11 @@ export default async function SettingsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="document">Documento (CNPJ ou CPF)</Label>
-              <Input id="document" name="document" defaultValue={tenant.settings?.document ?? ""} required placeholder="Apenas números ou com formatação" />
+              <Input id="document" name="document" defaultValue={tenant.settings?.document ?? ""} placeholder="Apenas números ou com formatação" />
             </div>
             <div>
               <Label htmlFor="address">Endereço Físico completo</Label>
-              <Input id="address" name="address" defaultValue={tenant.settings?.address ?? ""} required placeholder="Rua, Número, Bairro, Cidade, CEP" />
+              <Input id="address" name="address" defaultValue={tenant.settings?.address ?? ""} placeholder="Rua, Número, Bairro, Cidade, CEP" />
             </div>
           </div>
 
@@ -128,7 +129,7 @@ export default async function SettingsPage() {
               freeShippingMinAmount: tenant.settings.freeShippingMinAmount ? Number(tenant.settings.freeShippingMinAmount) : null
             } : null} 
           />
-          <Button type="submit">Salvar alterações</Button>
+          <SubmitButton />
         </form>
       </Card>
     </div>
