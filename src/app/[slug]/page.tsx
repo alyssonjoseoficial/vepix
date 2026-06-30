@@ -71,13 +71,7 @@ export default async function StorePage({
     });
   }
 
-  // AI Recommended removed - fallback to 4 random/recent products
-  let recommended = [] as typeof allProducts;
-  if (!selectedCategoryId && !isSearching && allProducts.length > 0) {
-    // Pegar 4 produtos que não são destaques para recomendar
-    recommended = allProducts.filter(p => !p.featured).slice(0, 4);
-    if (recommended.length === 0) recommended = allProducts.slice(0, 4);
-  }
+
 
   // Helpers para serializar objetos do Prisma
   const serializeProduct = (p: any) => ({
@@ -166,36 +160,7 @@ export default async function StorePage({
 
         <div id="colecao" className="scroll-mt-4"></div>
 
-        {/* AI RECOMMENDED SECTION */}
-        {!selectedCategoryId && !isSearching && !isFreeShipping && recommended.length > 0 && (
-          <section className="mx-auto max-w-7xl px-2 mt-4 sm:px-4">
-            <div className="bg-white rounded-md shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-gradient-to-r from-purple-50 to-white">
-                <div className="flex items-center gap-2">
-                  <div className="bg-purple-600 text-white p-1 rounded-md">
-                    <Sparkles className="h-4 w-4" />
-                  </div>
-                  <h2 className="text-lg font-extrabold text-slate-900 uppercase">Seleção Mágica IA</h2>
-                </div>
-                <span className="text-xs font-semibold text-purple-600">Ver tudo &gt;</span>
-              </div>
-              
-              <div className="p-4 bg-slate-50">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x pb-2">
-                  {recommended.map((product) => (
-                    <div key={product.id} className="min-w-[150px] w-[150px] sm:min-w-[180px] sm:w-[180px] snap-start shrink-0">
-                      <ProductCard
-                        product={serializeProduct(product)}
-                        storeSlug={tenant.slug}
-                        primaryColor={tenant.primaryColor}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+
 
         {/* FEATURED SECTION */}
         {!selectedCategoryId && !isSearching && !isFreeShipping && featured.length > 0 && (
