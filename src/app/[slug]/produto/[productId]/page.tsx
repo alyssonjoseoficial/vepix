@@ -6,6 +6,8 @@ import { ProductDetailClient } from "@/components/store/product-detail-client";
 import { ProductGallery } from "@/components/store/product-gallery";
 import { CartProvider } from "@/components/store/cart-context";
 
+export const revalidate = 60; // Cache de 1 minuto
+
 export default async function ProductPage({
   params,
 }: {
@@ -28,6 +30,7 @@ export default async function ProductPage({
 
   const price = Number(product.price);
   const comparePrice = product.comparePrice ? Number(product.comparePrice) : null;
+  const productImages = Array.isArray(product.imageUrls) ? (product.imageUrls as string[]) : [];
 
   return (
     <CartProvider storeSlug={tenant.slug}>
@@ -38,7 +41,7 @@ export default async function ProductPage({
           <div className="grid gap-12 lg:grid-cols-12">
             {/* Image Gallery */}
             <div className="lg:col-span-5 w-full">
-              <ProductGallery images={product.imageUrls} productName={product.name} />
+              <ProductGallery images={productImages} productName={product.name} />
             </div>
 
             {/* Product Info */}
@@ -73,7 +76,7 @@ export default async function ProductPage({
                     id: product.id,
                     name: product.name,
                     price: price,
-                    imageUrl: (product.imageUrls && product.imageUrls.length > 0) ? product.imageUrls[0] : undefined,
+                    imageUrl: productImages.length > 0 ? productImages[0] : undefined,
                     stock: product.stock,
                     freeShipping: product.freeShipping
                   }} 

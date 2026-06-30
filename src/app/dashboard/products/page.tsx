@@ -20,7 +20,7 @@ export default async function ProductsPage({
   const whereClause: any = { tenantId: tenant.id };
   
   if (q) {
-    whereClause.name = { contains: q, mode: "insensitive" };
+    whereClause.name = { contains: q };
   }
   
   if (category === "none") {
@@ -74,9 +74,9 @@ export default async function ProductsPage({
                 className="flex items-center justify-between rounded-xl border border-slate-100 p-4"
               >
                 <div className="flex items-center gap-4">
-                  {product.imageUrls && product.imageUrls.length > 0 ? (
+                  {Array.isArray(product.imageUrls) && product.imageUrls.length > 0 ? (
                     <div className="relative h-12 w-12 rounded-md overflow-hidden bg-slate-100">
-                      <Image src={product.imageUrls[0]} alt={product.name} fill className="object-cover" />
+                      <Image src={String(product.imageUrls[0])} alt={product.name} fill className="object-cover" />
                     </div>
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-md bg-slate-100 text-slate-400">

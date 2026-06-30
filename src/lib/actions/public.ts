@@ -31,7 +31,7 @@ export async function getCartRecommendationsAction(storeSlug: string, cartItemNa
         slug: p.slug,
         price: Number(p.price),
         comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-        imageUrl: (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls[0] : null,
+        imageUrl: (Array.isArray(p.imageUrls) && p.imageUrls.length > 0) ? String(p.imageUrls[0]) : null,
         featured: p.featured,
         stock: p.stock,
       }));

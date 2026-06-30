@@ -5,9 +5,10 @@ import { ProductCard } from "@/components/store/product-card";
 import { CartProvider } from "@/components/store/cart-context";
 import { MegaOfferCarousel } from "@/components/store/mega-offer-carousel";
 import { ActionableBanners } from "@/components/store/actionable-banners";
-import { getRecommendedProducts } from "@/lib/ai";
 import { Sparkles, ArrowRight, ShoppingBag, Zap, Tag, Star, Package, TrendingUp, SearchX } from "lucide-react";
 import Link from "next/link";
+
+export const revalidate = 60; // Cache de 1 minuto
 
 export default async function StorePage({
   params,
@@ -70,13 +71,12 @@ export default async function StorePage({
     });
   }
 
-  // IA Recommendations
+  // AI Recommended removed - fallback to 4 random/recent products
   let recommended = [] as typeof allProducts;
   if (!selectedCategoryId && !isSearching && allProducts.length > 0) {
-    const recommendedIds = await getRecommendedProducts(
-      allProducts.map(p => ({ id: p.id, name: p.name, description: p.description }))
-    );
-    recommended = allProducts.filter(p => recommendedIds.includes(p.id));
+    // Pegar 4 produtos que não são destaques para recomendar
+    recommended = allProducts.filter(p => !p.featured).slice(0, 4);
+    if (recommended.length === 0) recommended = allProducts.slice(0, 4);
   }
 
   // Helpers para serializar objetos do Prisma
@@ -86,7 +86,7 @@ export default async function StorePage({
     slug: p.slug,
     price: Number(p.price),
     comparePrice: p.comparePrice ? Number(p.comparePrice) : null,
-    imageUrl: (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls[0] : null,
+    imageUrl: (Array.isArray(p.imageUrls) && p.imageUrls.length > 0) ? String(p.imageUrls[0]) : null,
     featured: p.featured,
     stock: p.stock,
     freeShipping: p.freeShipping,

@@ -16,8 +16,8 @@ export default async function AdminTenantsPage({
   const tenants = await prisma.tenant.findMany({
     where: q ? {
       OR: [
-        { name: { contains: q, mode: "insensitive" } },
-        { slug: { contains: q, mode: "insensitive" } },
+        { name: { contains: q } },
+        { slug: { contains: q } },
       ]
     } : undefined,
     orderBy: { createdAt: "desc" },

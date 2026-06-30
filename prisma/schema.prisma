@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 enum UserRole {
@@ -246,7 +246,7 @@ model Product {
   price        Decimal     @db.Decimal(10, 2)
   comparePrice Decimal?    @db.Decimal(10, 2)
   stock        Int         @default(0)
-  imageUrls    String[]    @default([])
+  imageUrls    Json        @default("[]")
   featured     Boolean     @default(false)
   isMegaOffer  Boolean     @default(false)
   freeShipping Boolean     @default(false)
