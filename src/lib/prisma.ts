@@ -9,6 +9,11 @@ function createPrismaClient() {
   }
   return new PrismaClient({
     log: ['error'],
+    datasources: {
+      db: {
+        url: connectionString,
+      },
+    },
   } as any);
 }
 
