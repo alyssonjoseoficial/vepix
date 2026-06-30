@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { seedDummyInvoices } from '@/lib/actions/finance';
@@ -72,3 +73,4 @@ export async function GET() {
     return NextResponse.json({ success: false, error: error.message });
   }
 }
+
