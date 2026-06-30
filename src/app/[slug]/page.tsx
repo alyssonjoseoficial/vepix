@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { StoreHeader } from "@/components/store/header";
@@ -22,14 +23,22 @@ export default async function StorePage({
   const isSearching = !!searchQuery;
   const isFreeShipping = freteGratis === 'true';
 
-  const tenant = await prisma.tenant.findUnique({
-    where: { slug },
-    include: {
-      products: { where: { active: true }, orderBy: { createdAt: "desc" } },
-      categories: { orderBy: { name: "asc" } },
-      settings: true,
+  const getCachedTenant = unstable_cache(
+    async (storeSlug: string) => {
+      return await prisma.tenant.findUnique({
+        where: { slug: storeSlug },
+        include: {
+          products: { where: { active: true }, orderBy: { createdAt: "desc" } },
+          categories: { orderBy: { name: "asc" } },
+          settings: true,
+        },
+      });
     },
-  });
+    [`tenant-store-data-${slug}`],
+    { revalidate: 60 }
+  );
+
+  const tenant = await getCachedTenant(slug);
 
   if (!tenant) notFound();
 
