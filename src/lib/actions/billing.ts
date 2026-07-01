@@ -56,12 +56,27 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
       ? `${appUrl}/api/webhooks/mercadopago` 
       : undefined;
 
-    const mpBody: any = {
-      ...paymentData.formData,
-      transaction_amount: Number((price / 100).toFixed(2)),
-      description: `Assinatura VePix SaaS - Loja ${tenant.name}`,
-      external_reference: `${tenant.id}___${planId}`,
-    };
+    let mpBody: any;
+
+    if (paymentData.isDirectPix) {
+      mpBody = {
+        transaction_amount: Number((price / 100).toFixed(2)),
+        description: `Assinatura VePix SaaS - Loja ${tenant.name}`,
+        payment_method_id: 'pix',
+        payer: {
+          email: paymentData.email || "contato@vepix.com.br",
+          first_name: tenant.name,
+        },
+        external_reference: `${tenant.id}___${planId}`,
+      };
+    } else {
+      mpBody = {
+        ...paymentData.formData,
+        transaction_amount: Number((price / 100).toFixed(2)),
+        description: `Assinatura VePix SaaS - Loja ${tenant.name}`,
+        external_reference: `${tenant.id}___${planId}`,
+      };
+    }
 
     if (notificationUrl) {
       mpBody.notification_url = notificationUrl;
@@ -96,7 +111,10 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
 
     return { 
       success: true,
-      status: mpResponse.status
+      status: mpResponse.status,
+      ticketUrl: mpResponse.point_of_interaction?.transaction_data?.ticket_url,
+      qrCodeBase64: mpResponse.point_of_interaction?.transaction_data?.qr_code_base64,
+      qrCode: mpResponse.point_of_interaction?.transaction_data?.qr_code,
     };
 
   } catch (error: any) {
