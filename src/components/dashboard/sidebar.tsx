@@ -46,7 +46,7 @@ export function DashboardSidebar({
       <div className="border-b border-slate-200 p-6">
         <div className="flex items-center gap-3">
           {storeLogo ? (
-            <img src={storeLogo} alt={storeName} className="h-10 w-10 object-contain rounded-md shrink-0 bg-white" />
+            <img src={storeLogo.startsWith("data:image") ? `/api/public/${storeSlug}/logo` : storeLogo} alt={storeName} className="h-10 w-10 object-contain rounded-md shrink-0 bg-white" />
           ) : (
             <div className="h-10 w-10 shrink-0 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
               {storeName.charAt(0).toUpperCase()}

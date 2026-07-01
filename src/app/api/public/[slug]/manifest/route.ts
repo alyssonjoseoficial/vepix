@@ -22,12 +22,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     theme_color: tenant.primaryColor || "#ee4d2d",
     icons: [
       {
-        src: tenant.logoUrl || "/favicon.ico",
+        src: `/api/public/${slug}/logo`,
         sizes: "192x192",
         type: "image/png"
       },
       {
-        src: tenant.logoUrl || "/favicon.ico",
+        src: `/api/public/${slug}/logo`,
         sizes: "512x512",
         type: "image/png"
       }

@@ -24,7 +24,7 @@ export function StoreHeader({
         <Link href={`/${store.slug}`} className="flex shrink-0 items-center gap-3 text-white">
           {store.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={store.logoUrl} alt={store.name} className="h-10 w-10 rounded-full object-cover" />
+            <img src={store.logoUrl.startsWith("data:image") ? `/api/public/${store.slug}/logo` : store.logoUrl} alt={store.name} className="h-10 w-10 rounded-full object-cover" />
           ) : (
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-bold">
               {store.name.charAt(0)}
