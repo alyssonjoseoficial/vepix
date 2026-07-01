@@ -34,47 +34,54 @@ export function CheckoutButton({ planId, price, mpPublicKey }: { planId: string,
     }
   }
 
-  if (showPayment) {
-    return (
-      <div className="w-full mt-auto bg-white p-4 rounded-xl border border-slate-200">
-        <Payment
-          initialization={{ 
-            amount: Number((price / 100).toFixed(2)),
-          }}
-          customization={{
-            paymentMethods: {
-              ticket: "all",
-              bankTransfer: "all",
-              creditCard: "all",
-              debitCard: "all",
-              mercadoPago: "all",
-            },
-            visual: {
-              hideFormTitle: true,
-              hidePaymentButton: false,
-            }
-          }}
-          onSubmit={handlePaymentSubmit}
-        />
-        <Button 
-          variant="ghost" 
-          className="w-full mt-4" 
-          onClick={() => setShowPayment(false)}
-        >
-          Cancelar
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <Button 
-      onClick={() => setShowPayment(true)} 
-      disabled={loading || !mpPublicKey}
-      className="w-full mt-auto"
-    >
-      {mpPublicKey ? "Assinar Agora" : "Configuração MP Pendente"}
-    </Button>
+    <>
+      <Button 
+        onClick={() => setShowPayment(true)} 
+        disabled={loading || !mpPublicKey}
+        className="w-full mt-auto"
+      >
+        {mpPublicKey ? "Assinar Agora" : "Configuração MP Pendente"}
+      </Button>
+
+      {showPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-lg">Finalizar Pagamento</h3>
+              <button 
+                onClick={() => setShowPayment(false)}
+                className="text-slate-400 hover:text-slate-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+              <Payment
+                initialization={{ 
+                  amount: Number((price / 100).toFixed(2)),
+                }}
+                customization={{
+                  paymentMethods: {
+                    ticket: "all",
+                    bankTransfer: "all",
+                    creditCard: "all",
+                    debitCard: "all",
+                    mercadoPago: "all",
+                  },
+                  visual: {
+                    hideFormTitle: true,
+                    hidePaymentButton: false,
+                  }
+                }}
+                onSubmit={handlePaymentSubmit}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
+
 }
 
