@@ -11,7 +11,7 @@ export async function createCheckoutSession(planId: string, price: number) {
 
   // Aqui nós chamaríamos a API do Mercado Pago
   // Para fins de MVP / Simulação, vamos retornar um link falso que será resolvido no webhook simulado
-  const checkoutUrl = await generateMercadoPagoCheckoutUrl(tenantId, planId, price);
+  const checkoutData = await generateMercadoPagoCheckoutUrl(tenantId, planId, price);
   
   // Opcional: já podemos criar uma Subscription "INCOMPLETE" no banco, se não existir
   const existingSub = await prisma.subscription.findUnique({ where: { tenantId } });
@@ -30,5 +30,5 @@ export async function createCheckoutSession(planId: string, price: number) {
      });
   }
 
-  return checkoutUrl;
+  return checkoutData;
 }

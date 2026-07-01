@@ -34,5 +34,5 @@ export async function generateMercadoPagoCheckoutUrl(tenantId: string, planId: s
     }
   });
 
-  return response.init_point || "";
+  return { url: response.init_point || "", id: response.id || "" };
 }
