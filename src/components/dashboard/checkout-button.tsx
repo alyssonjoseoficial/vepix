@@ -37,7 +37,7 @@ export function CheckoutButton({ planId, price }: { planId: string, price: numbe
   if (preferenceId) {
     return (
       <div className="w-full mt-auto">
-        <Wallet initialization={{ preferenceId }} customization={{ texts: { action: "pay", valueProp: "security_details" } }} />
+        <Wallet initialization={{ preferenceId }} />
       </div>
     );
   }
