@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 import { processSaaSPayment } from "@/lib/actions/billing";
 import { Payment, initMercadoPago } from "@mercadopago/sdk-react";
 
-export function CheckoutButton({ planId, price }: { planId: string, price: number }) {
+export function CheckoutButton({ planId, price, mpPublicKey }: { planId: string, price: number, mpPublicKey: string }) {
   const [loading, setLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_MP_PUBLIC_KEY) {
-      initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY, { locale: "pt-BR" });
+    if (mpPublicKey) {
+      initMercadoPago(mpPublicKey, { locale: "pt-BR" });
     }
-  }, []);
+  }, [mpPublicKey]);
 
   async function handlePaymentSubmit(param: any) {
     setLoading(true);
@@ -70,10 +70,10 @@ export function CheckoutButton({ planId, price }: { planId: string, price: numbe
   return (
     <Button 
       onClick={() => setShowPayment(true)} 
-      disabled={loading || !process.env.NEXT_PUBLIC_MP_PUBLIC_KEY}
+      disabled={loading || !mpPublicKey}
       className="w-full mt-auto"
     >
-      {process.env.NEXT_PUBLIC_MP_PUBLIC_KEY ? "Assinar Agora" : "Configuração MP Pendente"}
+      {mpPublicKey ? "Assinar Agora" : "Configuração MP Pendente"}
     </Button>
   );
 }
