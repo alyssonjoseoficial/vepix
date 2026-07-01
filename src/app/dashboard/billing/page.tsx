@@ -38,7 +38,7 @@ export default async function BillingPage() {
         </div>
       )}
 
-      <BillingBlock tenantId={tenant.id} />
+      <BillingBlock tenantId={tenant.id} billingStatus={billing.status} daysRemaining={billing.daysRemaining} />
     </div>
   );
 }

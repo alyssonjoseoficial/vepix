@@ -27,7 +27,7 @@ export default async function DashboardLayout({
       storeLogo={tenant.logoUrl}
     >
       {billingInfo.status === "BLOCKED" ? (
-        <BillingBlock tenantId={tenant.id} />
+        <BillingBlock tenantId={tenant.id} billingStatus={billingInfo.status} daysRemaining={billingInfo.daysRemaining} />
       ) : (
         <>
           {billingInfo.status === "WARNING" && (

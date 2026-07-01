@@ -89,6 +89,12 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
       }
     });
 
+    const isApproved = mpResponse.status === "approved";
+    const nextMonth = new Date();
+    if (isApproved) {
+      nextMonth.setDate(nextMonth.getDate() + 30);
+    }
+
     // Update subscription
     const existingSub = await prisma.subscription.findUnique({ where: { tenantId: tenant.id } });
     if (!existingSub) {
@@ -96,7 +102,8 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
         data: {
           tenantId: tenant.id,
           planId,
-          status: mpResponse.status === "approved" ? "ACTIVE" : "INCOMPLETE",
+          status: isApproved ? "ACTIVE" : "INCOMPLETE",
+          ...(isApproved ? { currentPeriodEnd: nextMonth } : {})
         }
       });
     } else {
@@ -104,7 +111,8 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
         where: { tenantId: tenant.id },
         data: { 
           planId, 
-          status: mpResponse.status === "approved" ? "ACTIVE" : "INCOMPLETE" 
+          status: isApproved ? "ACTIVE" : "INCOMPLETE",
+          ...(isApproved ? { currentPeriodEnd: nextMonth } : {})
         }
       });
     }
