@@ -9,10 +9,16 @@ import { Card, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
+    setLoading(true);
+    setError("");
     const result = await loginUser(formData);
-    if (result?.error) setError(result.error);
+    if (result?.error) {
+      setError(result.error);
+      setLoading(false);
+    }
   }
 
   return (
@@ -37,8 +43,8 @@ export default function LoginPage() {
             <Input id="password" name="password" type="password" required />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" className="w-full">
-            Entrar
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Aguarde..." : "Entrar"}
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">
