@@ -60,10 +60,23 @@ export async function POST(req: NextRequest) {
       const [tenantId, planId] = mpPayment.external_reference.split("___");
       
       if (tenantId && planId) {
+        const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+        if (!tenant) return NextResponse.json({ error: "Tenant não encontrado" }, { status: 404 });
+
         const existingSub = await prisma.subscription.findUnique({ where: { tenantId } });
         
         const now = new Date();
-        const nextMonth = new Date();
+        const trialEndsAt = new Date(tenant.createdAt);
+        trialEndsAt.setDate(trialEndsAt.getDate() + 14);
+
+        let baseDate = now;
+        if (existingSub?.currentPeriodEnd && existingSub.currentPeriodEnd > now) {
+          baseDate = new Date(existingSub.currentPeriodEnd);
+        } else if (trialEndsAt > now) {
+          baseDate = trialEndsAt;
+        }
+
+        const nextMonth = new Date(baseDate);
         nextMonth.setDate(nextMonth.getDate() + 30); // Recarga de 30 dias
 
         if (existingSub) {

@@ -90,13 +90,27 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
     });
 
     const isApproved = mpResponse.status === "approved";
-    const nextMonth = new Date();
+    
+    // Calculate new expiration date
+    const now = new Date();
+    const trialEndsAt = new Date(tenant.createdAt);
+    trialEndsAt.setDate(trialEndsAt.getDate() + 14);
+    
+    const existingSub = await prisma.subscription.findUnique({ where: { tenantId: tenant.id } });
+    
+    let baseDate = now;
+    if (existingSub?.currentPeriodEnd && existingSub.currentPeriodEnd > now) {
+      baseDate = new Date(existingSub.currentPeriodEnd);
+    } else if (trialEndsAt > now) {
+      baseDate = trialEndsAt;
+    }
+    
+    const nextMonth = new Date(baseDate);
     if (isApproved) {
       nextMonth.setDate(nextMonth.getDate() + 30);
     }
 
     // Update subscription
-    const existingSub = await prisma.subscription.findUnique({ where: { tenantId: tenant.id } });
     if (!existingSub) {
       await prisma.subscription.create({
         data: {
