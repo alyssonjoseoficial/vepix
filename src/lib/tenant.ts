@@ -12,7 +12,7 @@ export async function getTenantBySlug(slug: string) {
   });
 }
 
-export async function getCurrentTenant() {
+export const getCurrentTenant = cache(async () => {
   const session = await auth();
   if (!session?.user?.tenantId) return null;
 
@@ -24,9 +24,11 @@ export async function getCurrentTenant() {
       _count: { select: { products: true, orders: true, customers: true } },
     },
   });
-}
+});
 
-export async function requireTenantAccess() {
+import { cache } from "react";
+
+export const requireTenantAccess = cache(async () => {
   const session = await auth();
   
   if (!session?.user) {
@@ -45,7 +47,7 @@ export async function requireTenantAccess() {
   if (!tenant) throw new Error("TENANT_NOT_FOUND");
 
   return { session, tenant };
-}
+});
 
 export function isSubscriptionActive(status: string) {
   return status === "ACTIVE" || status === "TRIALING";
