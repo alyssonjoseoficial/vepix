@@ -5,7 +5,7 @@ import { useCart } from "@/components/store/cart-context";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 
-export function OrderSuccessClient({ orderStatus, paymentMethod }: { orderStatus: string; paymentMethod: string }) {
+export function OrderSuccessClient({ orderStatus, paymentMethod }: { orderStatus: string; paymentMethod: string | null }) {
   const { clearCart } = useCart();
   const [cleared, setCleared] = useState(false);
 
