@@ -67,6 +67,13 @@ export async function POST(req: NextRequest) {
             }
           });
         }
+
+        await prisma.platformNotification.create({
+          data: {
+            tenantId,
+            message: `🎉 Assinatura SaaS Confirmada! Seu plano foi ativado com sucesso.`,
+          }
+        });
       }
     }
 
