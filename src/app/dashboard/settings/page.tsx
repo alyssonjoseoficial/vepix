@@ -20,7 +20,7 @@ export default async function SettingsPage() {
             <div className="mt-2 flex items-center gap-4">
               {tenant.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={tenant.logoUrl} alt="Logo Atual" className="h-16 w-16 rounded-full object-cover border border-slate-200" />
+                <img src={tenant.logoUrl.startsWith('data:image') ? `/api/public/${tenant.slug}/logo` : tenant.logoUrl} alt="Logo Atual" className="h-16 w-16 rounded-full object-cover border border-slate-200" />
               ) : (
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-500 border border-slate-200">
                   {tenant.name.charAt(0)}
@@ -126,7 +126,9 @@ export default async function SettingsPage() {
           <BannerSettingsFields 
             settings={tenant.settings ? {
               ...tenant.settings,
-              freeShippingMinAmount: tenant.settings.freeShippingMinAmount ? Number(tenant.settings.freeShippingMinAmount) : null
+              freeShippingMinAmount: tenant.settings.freeShippingMinAmount ? Number(tenant.settings.freeShippingMinAmount) : null,
+              banner1ImageUrl: tenant.settings.banner1ImageUrl?.startsWith('data:image') ? `/api/public/${tenant.slug}/banner/1` : tenant.settings.banner1ImageUrl,
+              banner2ImageUrl: tenant.settings.banner2ImageUrl?.startsWith('data:image') ? `/api/public/${tenant.slug}/banner/2` : tenant.settings.banner2ImageUrl,
             } : null} 
           />
           <SubmitButton />
