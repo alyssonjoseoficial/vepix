@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 import { ProductDetailClient } from "@/components/store/product-detail-client";
 import { ProductGallery } from "@/components/store/product-gallery";
 import { CartProvider } from "@/components/store/cart-context";
+import { ProductReviews } from "@/components/store/product-reviews";
 
 export const revalidate = 60; // Cache de 1 minuto
 
@@ -23,7 +24,10 @@ export default async function ProductPage({
 
   const product = await prisma.product.findUnique({
     where: { id: productId, tenantId: tenant.id },
-    include: { category: true },
+    include: { 
+      category: true,
+      reviews: { orderBy: { createdAt: "desc" } }
+    },
   });
 
   if (!product || !product.active) notFound();
@@ -89,6 +93,12 @@ export default async function ProductPage({
               </div>
             </div>
           </div>
+
+          <ProductReviews 
+            productId={product.id} 
+            tenantId={tenant.id} 
+            initialReviews={product.reviews} 
+          />
         </main>
       </div>
     </CartProvider>

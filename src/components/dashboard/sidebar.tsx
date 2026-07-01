@@ -32,15 +32,17 @@ export function DashboardSidebar({
   storeName,
   storeSlug,
   storeLogo,
+  onNavigate,
 }: {
   storeName: string;
   storeSlug: string;
   storeLogo?: string | null;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
+    <aside className="flex h-full w-64 shrink-0 flex-col bg-transparent">
       <div className="border-b border-slate-200 p-6">
         <div className="flex items-center gap-3">
           {storeLogo ? (
@@ -67,6 +69,7 @@ export function DashboardSidebar({
           <Link
             key={href}
             href={href}
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition",
               pathname === href

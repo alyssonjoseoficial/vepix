@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -13,7 +13,9 @@ export async function registerStore(formData: FormData) {
   const password = String(formData.get("password") ?? "");
   const storeName = String(formData.get("storeName") ?? "").trim();
   const storeSlug = slugify(String(formData.get("storeSlug") ?? storeName));
-  const planId = String(formData.get("planId") ?? "").trim();
+  const planId = String(formData.get('planId') ?? '').trim();
+  const securityQuestion = String(formData.get('securityQuestion') ?? '').trim();
+  const securityAnswer = String(formData.get('securityAnswer') ?? '').trim();
 
   if (!name || !email || !password || !storeName || !storeSlug) {
     return { error: "Preencha todos os campos obrigatórios." };
@@ -70,7 +72,7 @@ export async function registerStore(formData: FormData) {
 
   await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
-      data: { name, email, passwordHash, role: "STORE_OWNER" },
+      data: { name, email, passwordHash, role: 'STORE_OWNER', securityQuestion, securityAnswer },
     });
 
     const tenant = await tx.tenant.create({
@@ -125,4 +127,39 @@ export async function loginUser(formData: FormData) {
     // falhará silenciosamente ou cairá no catch.
     throw error;
   }
+}
+
+export async function checkEmailForRecovery(email: string) {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return { error: "E-mail n�o encontrado." };
+  if (!user.securityQuestion) return { error: "Este usu�rio n�o configurou uma Pergunta de Seguran�a." };
+  return { success: true, question: user.securityQuestion };
+}
+
+export async function verifySecurityAnswer(email: string, answer: string) {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || !user.securityAnswer) return { error: "Erro interno." };
+  
+  if (user.securityAnswer.trim().toLowerCase() !== answer.trim().toLowerCase()) {
+    return { error: "Resposta incorreta." };
+  }
+  return { success: true };
+}
+
+export async function resetPassword(email: string, newPassword: string) {
+  if (newPassword.length < 6) return { error: "A senha deve ter pelo menos 6 caracteres." };
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+  await prisma.user.update({
+    where: { email },
+    data: { passwordHash }
+  });
+  return { success: true };
+}
+
+export async function updateSecurityQuestion(email: string, question: string, answer: string) {
+  await prisma.user.update({
+    where: { email },
+    data: { securityQuestion: question, securityAnswer: answer }
+  });
+  return { success: true };
 }

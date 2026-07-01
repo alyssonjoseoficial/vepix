@@ -114,7 +114,6 @@ function CheckoutForm({
       return;
     }
 
-    clearCart();
     router.push(`/${slug}/pedido/${result.orderId}`);
   }
 

@@ -7,6 +7,7 @@ import { CartProvider } from "@/components/store/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { CheckCircle2, Truck, Calendar, Package, Copy } from "lucide-react";
 import { MercadoPagoConfig, Payment } from "mercadopago";
+import { OrderSuccessClient } from "./order-success-client";
 
 export default async function OrderSuccessPage({
   params,
@@ -139,6 +140,8 @@ export default async function OrderSuccessPage({
             {order.shippingZipCode ? `CEP: ${order.shippingZipCode}` : ""}
           </p>
         </div>
+
+        <OrderSuccessClient orderStatus={order.status} paymentMethod={order.paymentMethod} />
 
         <Link href={`/${slug}`}>
           <Button className="mt-8">Voltar à loja</Button>

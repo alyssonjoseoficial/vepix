@@ -149,19 +149,7 @@ export async function updateStoreSettings(formData: FormData): Promise<void> {
   if (logoFile && logoFile.size > 0) {
     const bytes = await logoFile.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    const ext = logoFile.name.split('.').pop() || "png";
-    const filename = `${tenant.id}-${Date.now()}.${ext}`;
-    const uploadDir = join(process.cwd(), "public", "uploads", "logos");
-    
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {}
-
-    const path = join(uploadDir, filename);
-    await writeFile(path, buffer);
-    
-    logoUrl = `/uploads/logos/${filename}`;
+    logoUrl = `data:${logoFile.type};base64,${buffer.toString("base64")}`;
   }
 
   const existingSettings = await prisma.storeSettings.findUnique({ where: { tenantId: tenant.id } });
@@ -170,24 +158,14 @@ export async function updateStoreSettings(formData: FormData): Promise<void> {
   let banner1ImageUrl = existingSettings?.banner1ImageUrl;
   if (banner1File && banner1File.size > 0) {
     const bytes = await banner1File.arrayBuffer();
-    const ext = banner1File.name.split('.').pop() || "png";
-    const filename = `banner1-${tenant.id}-${Date.now()}.${ext}`;
-    const uploadDir = join(process.cwd(), "public", "uploads", "banners");
-    try { await mkdir(uploadDir, { recursive: true }); } catch (e) {}
-    await writeFile(join(uploadDir, filename), Buffer.from(bytes));
-    banner1ImageUrl = `/uploads/banners/${filename}`;
+    banner1ImageUrl = `data:${banner1File.type};base64,${Buffer.from(bytes).toString("base64")}`;
   }
 
   const banner2File = formData.get("banner2Image") as File | null;
   let banner2ImageUrl = existingSettings?.banner2ImageUrl;
   if (banner2File && banner2File.size > 0) {
     const bytes = await banner2File.arrayBuffer();
-    const ext = banner2File.name.split('.').pop() || "png";
-    const filename = `banner2-${tenant.id}-${Date.now()}.${ext}`;
-    const uploadDir = join(process.cwd(), "public", "uploads", "banners");
-    try { await mkdir(uploadDir, { recursive: true }); } catch (e) {}
-    await writeFile(join(uploadDir, filename), Buffer.from(bytes));
-    banner2ImageUrl = `/uploads/banners/${filename}`;
+    banner2ImageUrl = `data:${banner2File.type};base64,${Buffer.from(bytes).toString("base64")}`;
   }
 
   await prisma.tenant.update({

@@ -68,8 +68,10 @@ model User {
   email         String         @unique
   emailVerified DateTime?
   passwordHash  String?
-  image         String?
-  role          UserRole       @default(STORE_OWNER)
+  image            String?
+  securityQuestion String?
+  securityAnswer   String?
+  role             UserRole       @default(STORE_OWNER)
   accounts      Account[]
   sessions      Session[]
   memberships   TenantMember[]
@@ -130,7 +132,7 @@ model Tenant {
   name           String
   slug           String          @unique
   description    String?
-  logoUrl        String?
+  logoUrl        String?         @db.LongText
   primaryColor   String          @default("#2563eb")
   secondaryColor String          @default("#1e40af")
   customDomain   String?         @unique
@@ -143,6 +145,7 @@ model Tenant {
   coupons        Coupon[]
   tickets        SupportTicket[]
   invoices       Invoice[]
+  reviews        Review[]
   subscription   Subscription?
   settings       StoreSettings?
   createdAt      DateTime        @default(now())
@@ -213,13 +216,13 @@ model StoreSettings {
   banner1Subtitle  String? @default("Confira condições")
   banner1Color     String? @default("bg-gradient-to-br from-orange-500 to-red-500")
   banner1Mode      String? @default("DYNAMIC")
-  banner1ImageUrl  String?
+  banner1ImageUrl  String? @db.LongText
   banner2Tag       String? @default("NOVIDADE")
   banner2Title     String? @default("Cashback")
   banner2Subtitle  String? @default("Em todas as compras")
   banner2Color     String? @default("bg-slate-900")
   banner2Mode      String? @default("DYNAMIC")
-  banner2ImageUrl  String?
+  banner2ImageUrl  String? @db.LongText
   freeShippingMinAmount Decimal? @db.Decimal(10, 2)
   tenant       Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
@@ -255,6 +258,7 @@ model Product {
   tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   category     Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   orderItems   OrderItem[]
+  reviews      Review[]
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
@@ -369,3 +373,18 @@ model SupportMessage {
   createdAt   DateTime      @default(now())
 }
 
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  rating    Int      @default(5)
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@index([tenantId])
+}

@@ -1,12 +1,18 @@
-import { LogOut, User } from "lucide-react";
-import { signOut } from "@/lib/auth";
+"use client";
+
+import { LogOut, User, Menu } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { NotificationBell } from "./notification-bell";
 
-export function DashboardHeader({ user }: { user: { name?: string | null; email?: string | null } }) {
+export function DashboardHeader({ user, onOpenMenu }: { user: { name?: string | null; email?: string | null }, onOpenMenu?: () => void }) {
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
       <div className="flex items-center gap-4">
-        {/* Espaço para barra de busca futura, se necessário */}
+        {onOpenMenu && (
+          <button onClick={onOpenMenu} className="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-md">
+            <Menu className="h-6 w-6" />
+          </button>
+        )}
       </div>
       
       <div className="flex items-center gap-6">
@@ -24,14 +30,13 @@ export function DashboardHeader({ user }: { user: { name?: string | null; email?
           </div>
         </div>
 
-        <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
-          <button 
-            title="Sair do painel" 
-            className="flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors p-2"
-          >
-            <LogOut className="h-5 w-5" />
-          </button>
-        </form>
+        <button 
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          title="Sair do painel" 
+          className="flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors p-2"
+        >
+          <LogOut className="h-5 w-5" />
+        </button>
       </div>
     </header>
   );

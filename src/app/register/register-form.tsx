@@ -48,6 +48,29 @@ export function RegisterForm({ plans, defaultPlanId }: { plans: any[], defaultPl
         <Label htmlFor="password">Senha</Label>
         <Input id="password" name="password" type="password" minLength={6} required />
       </div>
+      <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mt-4 space-y-3">
+        <h4 className="text-sm font-semibold text-slate-700">Recuperação de Senha</h4>
+        <p className="text-xs text-slate-500">Escolha uma pergunta para recuperar sua conta caso esqueça a senha.</p>
+        <div>
+          <Label htmlFor="securityQuestion" className="text-xs">Pergunta de Segurança</Label>
+          <select
+            id="securityQuestion"
+            name="securityQuestion"
+            className="mt-1 flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
+            required
+          >
+            <option value="">Selecione uma pergunta...</option>
+            <option value="Qual o nome do seu primeiro animal de estimação?">Qual o nome do seu primeiro animal de estimação?</option>
+            <option value="Qual o nome da sua mãe?">Qual o nome da sua mãe?</option>
+            <option value="Qual a cidade onde você nasceu?">Qual a cidade onde você nasceu?</option>
+            <option value="Qual a sua comida favorita?">Qual a sua comida favorita?</option>
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="securityAnswer" className="text-xs">Sua Resposta Secreta</Label>
+          <Input id="securityAnswer" name="securityAnswer" placeholder="Digite a resposta" required />
+        </div>
+      </div>
       <hr className="border-slate-200" />
       <div>
         <Label htmlFor="storeName">Nome da loja</Label>
