@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { CheckoutButton } from "./checkout-button";
+import { auth } from "@/lib/auth";
 
 export async function BillingBlock({ tenantId }: { tenantId: string }) {
+  const session = await auth();
   const plans = await prisma.plan.findMany({
     where: { active: true },
     orderBy: { priceMonthly: "asc" }
@@ -38,7 +40,7 @@ export async function BillingBlock({ tenantId }: { tenantId: string }) {
               </li>
             </ul>
 
-            <CheckoutButton planId={plan.id} price={plan.priceMonthly} mpPublicKey={process.env.MP_PUBLIC_KEY || process.env.NEXT_PUBLIC_MP_PUBLIC_KEY || ""} />
+            <CheckoutButton planId={plan.id} price={plan.priceMonthly} email={session?.user?.email || "contato@vepix.com.br"} mpPublicKey={process.env.MP_PUBLIC_KEY || process.env.NEXT_PUBLIC_MP_PUBLIC_KEY || ""} />
           </div>
         ))}
       </div>

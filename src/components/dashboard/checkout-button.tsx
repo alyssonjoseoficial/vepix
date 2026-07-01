@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { processSaaSPayment } from "@/lib/actions/billing";
 import { Payment, initMercadoPago } from "@mercadopago/sdk-react";
 
-export function CheckoutButton({ planId, price, mpPublicKey }: { planId: string, price: number, mpPublicKey: string }) {
+export function CheckoutButton({ planId, price, mpPublicKey, email }: { planId: string, price: number, mpPublicKey: string, email?: string }) {
   const [loading, setLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
 
@@ -60,6 +60,7 @@ export function CheckoutButton({ planId, price, mpPublicKey }: { planId: string,
               <Payment
                 initialization={{ 
                   amount: Number((price / 100).toFixed(2)),
+                  payer: email ? { email } : undefined,
                 }}
                 customization={{
                   paymentMethods: {
