@@ -24,8 +24,8 @@ function CartContent({ slug, store }: { slug: string; store: any }) {
       }
       setLoadingAi(true);
       try {
-        const itemNames = items.map(i => i.name);
-        const recs = await getCartRecommendationsAction(slug, itemNames);
+        const itemIds = items.map(i => i.productId);
+        const recs = await getCartRecommendationsAction(slug, itemIds);
         setRecommendations(recs);
       } catch (e) {
         console.error(e);
@@ -114,14 +114,13 @@ function CartContent({ slug, store }: { slug: string; store: any }) {
           {items.length > 0 && (loadingAi || recommendations.length > 0) && (
             <div className="mt-12 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="h-5 w-5 text-purple-500" />
                 <h3 className="text-xl font-bold text-slate-900">Você também pode gostar</h3>
               </div>
               
               {loadingAi ? (
                 <div className="flex items-center justify-center py-10 opacity-50">
-                  <div className="animate-spin h-6 w-6 border-2 border-purple-500 border-t-transparent rounded-full mr-3"></div>
-                  <span className="text-sm text-slate-500">A IA está analisando seu carrinho...</span>
+                  <div className="animate-spin h-6 w-6 border-2 border-slate-500 border-t-transparent rounded-full mr-3"></div>
+                  <span className="text-sm text-slate-500">Carregando sugestões...</span>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
