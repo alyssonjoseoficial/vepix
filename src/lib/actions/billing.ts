@@ -50,7 +50,7 @@ export async function processSaaSPayment(planId: string, price: number, paymentD
     const headersList = await headers();
     const host = headersList.get("host") || "localhost:3000";
     const protocol = headersList.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`;
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`).replace(/\/+$/, "");
     
     const notificationUrl = !appUrl.includes("localhost") 
       ? `${appUrl}/api/webhooks/mercadopago` 

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getCurrentTenant } from "@/lib/tenant";
 import { BillingBlock } from "@/components/dashboard/billing-block";
 import { redirect } from "next/navigation";
