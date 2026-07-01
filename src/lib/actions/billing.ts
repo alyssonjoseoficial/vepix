@@ -32,3 +32,81 @@ export async function createCheckoutSession(planId: string, price: number) {
 
   return checkoutData;
 }
+
+import { MercadoPagoConfig, Payment } from "mercadopago";
+import { headers } from "next/headers";
+
+export async function processSaaSPayment(planId: string, price: number, paymentData: any) {
+  const { tenant } = await requireTenantAccess();
+  
+  if (!process.env.MP_ACCESS_TOKEN) {
+    return { error: "Plataforma não configurada para receber pagamentos." };
+  }
+
+  const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+  const payment = new Payment(client);
+
+  try {
+    const headersList = await headers();
+    const host = headersList.get("host") || "localhost:3000";
+    const protocol = headersList.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`;
+    
+    const notificationUrl = !appUrl.includes("localhost") 
+      ? `${appUrl}/api/webhooks/mercadopago` 
+      : undefined;
+
+    const mpBody: any = {
+      ...paymentData.formData,
+      transaction_amount: Number((price / 100).toFixed(2)),
+      description: `Assinatura VePix SaaS - Loja ${tenant.name}`,
+      external_reference: `${tenant.id}___${planId}`,
+    };
+
+    if (notificationUrl) {
+      mpBody.notification_url = notificationUrl;
+    }
+
+    const mpResponse = await payment.create({
+      body: mpBody,
+      requestOptions: {
+        idempotencyKey: Math.random().toString(36).substring(7),
+      }
+    });
+
+    // Update subscription
+    const existingSub = await prisma.subscription.findUnique({ where: { tenantId: tenant.id } });
+    if (!existingSub) {
+      await prisma.subscription.create({
+        data: {
+          tenantId: tenant.id,
+          planId,
+          status: mpResponse.status === "approved" ? "ACTIVE" : "INCOMPLETE",
+        }
+      });
+    } else {
+      await prisma.subscription.update({
+        where: { tenantId: tenant.id },
+        data: { 
+          planId, 
+          status: mpResponse.status === "approved" ? "ACTIVE" : "INCOMPLETE" 
+        }
+      });
+    }
+
+    return { 
+      success: true,
+      status: mpResponse.status
+    };
+
+  } catch (error: any) {
+    console.error("Erro Pagamento SaaS:", error);
+    let errorMessage = "Erro ao processar pagamento.";
+    if (error && error.message) errorMessage = error.message;
+    if (error && error.cause) {
+      const cause = error.cause as any;
+      if (cause.length > 0 && cause[0].message) errorMessage = cause[0].message;
+    }
+    return { error: errorMessage };
+  }
+}

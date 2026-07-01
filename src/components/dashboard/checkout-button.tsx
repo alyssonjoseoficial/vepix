@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { createCheckoutSession } from "@/lib/actions/billing";
-import { Wallet, initMercadoPago } from "@mercadopago/sdk-react";
+import { processSaaSPayment } from "@/lib/actions/billing";
+import { Payment, initMercadoPago } from "@mercadopago/sdk-react";
 
 export function CheckoutButton({ planId, price }: { planId: string, price: number }) {
   const [loading, setLoading] = useState(false);
-  const [preferenceId, setPreferenceId] = useState<string | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MP_PUBLIC_KEY) {
@@ -15,40 +15,65 @@ export function CheckoutButton({ planId, price }: { planId: string, price: numbe
     }
   }, []);
 
-  async function handleCheckout() {
+  async function handlePaymentSubmit(param: any) {
     setLoading(true);
     try {
-      const data = await createCheckoutSession(planId, price);
-      if (data && data.id) {
-        // We will use the Wallet component if public key is available, else redirect
-        if (process.env.NEXT_PUBLIC_MP_PUBLIC_KEY) {
-          setPreferenceId(data.id);
-        } else if (data.url) {
-          window.location.href = data.url;
-        }
+      const plainParam = JSON.parse(JSON.stringify(param));
+      const result = await processSaaSPayment(planId, price, plainParam);
+      
+      if (result.error) {
+        alert(result.error);
+      } else {
+        alert("Assinatura confirmada com sucesso! Atualizando...");
+        window.location.reload();
       }
     } catch (error) {
-      alert("Erro ao iniciar pagamento. Tente novamente.");
+      alert("Erro inesperado ao processar pagamento.");
     } finally {
       setLoading(false);
     }
   }
 
-  if (preferenceId) {
+  if (showPayment) {
     return (
-      <div className="w-full mt-auto">
-        <Wallet initialization={{ preferenceId }} />
+      <div className="w-full mt-auto bg-white p-4 rounded-xl border border-slate-200">
+        <Payment
+          initialization={{ 
+            amount: Number((price / 100).toFixed(2)),
+          }}
+          customization={{
+            paymentMethods: {
+              ticket: "all",
+              bankTransfer: "all",
+              creditCard: "all",
+              debitCard: "all",
+              mercadoPago: "all",
+            },
+            visual: {
+              hideFormTitle: true,
+              hidePaymentButton: false,
+            }
+          }}
+          onSubmit={handlePaymentSubmit}
+        />
+        <Button 
+          variant="ghost" 
+          className="w-full mt-4" 
+          onClick={() => setShowPayment(false)}
+        >
+          Cancelar
+        </Button>
       </div>
     );
   }
 
   return (
     <Button 
-      onClick={handleCheckout} 
-      disabled={loading}
+      onClick={() => setShowPayment(true)} 
+      disabled={loading || !process.env.NEXT_PUBLIC_MP_PUBLIC_KEY}
       className="w-full mt-auto"
     >
-      {loading ? "Aguarde..." : "Assinar Agora"}
+      {process.env.NEXT_PUBLIC_MP_PUBLIC_KEY ? "Assinar Agora" : "Configuração MP Pendente"}
     </Button>
   );
 }
