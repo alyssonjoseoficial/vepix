@@ -39,6 +39,7 @@ const features = [
     description: "Neon + Render. Infraestrutura moderna e escalável.",
   },
 ];
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const plans = await prisma.plan.findMany({
