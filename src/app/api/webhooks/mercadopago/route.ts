@@ -11,9 +11,21 @@ export async function POST(req: NextRequest) {
     const dataId = body?.data?.id || url.searchParams.get("data.id") || url.searchParams.get("id");
     const type = body?.type || url.searchParams.get("type") || url.searchParams.get("topic");
 
-    if (!dataId || type !== "payment") {
+    const action = body?.action || url.searchParams.get("action");
+    const isPayment = type === "payment" || action?.startsWith("payment");
+
+    if (!dataId) {
       return NextResponse.json({ received: true });
     }
+
+    // DEBUG: Registrar que o webhook bateu aqui
+    try {
+      await prisma.platformNotification.create({
+        data: {
+          message: `📡 Webhook SaaS Recebido! ID: ${dataId}, Type: ${type}, Action: ${action}`,
+        }
+      });
+    } catch (e) {}
 
     // Assinatura válida ou fallback (confiamos no payment.get). Buscar detalhes do pagamento no MP.
     const accessToken = process.env.MP_ACCESS_TOKEN;
