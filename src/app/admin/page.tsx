@@ -30,6 +30,39 @@ export default async function SuperAdminDashboard() {
     include: { subscription: { include: { plan: true } } },
   });
 
+  // Calculate monthly revenue from active tenants
+  const activeTenantsWithPlans = await prisma.tenant.findMany({
+    where: { active: true },
+    include: { subscription: { include: { plan: true } } },
+  });
+  
+  const revenueMonthly = activeTenantsWithPlans.reduce((acc, tenant) => {
+    return acc + (tenant.subscription?.plan?.price || 0);
+  }, 0);
+
+  // Sync with Hub
+  try {
+    const payload = {
+      active_users: activeTenants,
+      revenue_monthly: revenueMonthly,
+      support_notifications: 0,
+      auto_blocks_today: 0,
+      new_subscriptions_today: 0
+    };
+    
+    // O Next.js fetch não tem timeout nativo simples, mas podemos ignorar erros
+    fetch("https://kirontech.com.br/api/webhook/update_stats.php", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "X-API-KEY": "vepix_api_key_2026"
+      },
+      body: JSON.stringify(payload),
+    }).catch(e => console.error("Erro ao sincronizar com Hub", e));
+  } catch (error) {
+    console.error("Failed to sync stats", error);
+  }
+
   return (
     <div className="space-y-8">
       <div>

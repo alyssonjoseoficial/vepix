@@ -48,6 +48,74 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       },
     }),
+    Credentials({
+      id: "sso",
+      name: "sso",
+      credentials: {
+        token: { label: "Token", type: "text" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.token) return null;
+        
+        const tokenStr = credentials.token as string;
+        // Chave secreta do Vepix no Control_SADMIN
+        const secretKey = 'vepix_secret_key_2026!@#';
+        
+        const parts = tokenStr.split('.');
+        if (parts.length !== 3) {
+          console.log("SSO ERRO: Token não tem 3 partes.");
+          return null;
+        }
+        
+        const [header, payload, signature] = parts;
+        
+        const crypto = require('crypto');
+        const expectedSig = crypto.createHmac('sha256', secretKey)
+                                  .update(`${header}.${payload}`)
+                                  .digest('base64url');
+                                  
+        if (expectedSig !== signature) {
+          console.log("SSO ERRO: Assinatura não bate!", { expected: expectedSig, received: signature });
+          return null;
+        }
+        
+        // Decodificando Payload
+        const decodedPayload = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+        console.log("SSO Payload:", decodedPayload);
+        
+        if (decodedPayload.exp * 1000 < Date.now()) {
+          console.log("SSO ERRO: Token expirado!");
+          return null;
+        }
+        
+        // Se a assinatura bate e não expirou, achar o Admin do Vepix
+        const user = await prisma.user.findFirst({
+          where: { role: 'PLATFORM_ADMIN' },
+          include: {
+            memberships: {
+              include: { tenant: true },
+              take: 1,
+            },
+          },
+        });
+        
+        if (!user) {
+          console.log("SSO ERRO: Usuário PLATFORM_ADMIN não encontrado!");
+          return null;
+        }
+        
+        const membership = user.memberships[0];
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: membership?.tenantId ?? null,
+          tenantSlug: membership?.tenant.slug ?? null,
+        };
+      }
+    }),
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }) {

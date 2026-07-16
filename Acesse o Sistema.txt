@@ -2,7 +2,7 @@ Chave key IA
 [REMOVIDO_POR_SEGURANCA]
 
 
-Servidor:
+Servidor: cd C:\xampp\htdocs\projeto_loja
 npm run dev
 
 landing page: http://localhost:3000/

@@ -1,0 +1,1 @@
+import 'dotenv/config'; import { POST } from '../src/app/api/webhooks/mercadopago/route'; import { NextRequest } from 'next/server'; async function main() { const req = new NextRequest('http://localhost/api/webhooks/mercadopago?topic=payment&id=165760117411', { method: 'POST' }); const res = await POST(req); console.log(res.status, await res.json()); } main();
