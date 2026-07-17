@@ -37,7 +37,7 @@ export default async function SuperAdminDashboard() {
   });
   
   const revenueMonthly = activeTenantsWithPlans.reduce((acc, tenant) => {
-    return acc + (tenant.subscription?.plan?.price || 0);
+    return acc + (tenant.subscription?.plan?.priceMonthly || 0);
   }, 0);
 
   // Sync with Hub
