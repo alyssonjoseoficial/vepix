@@ -57,6 +57,21 @@ export async function createTicket(formData: FormData) {
       }
     });
 
+    // --- KIRONTECH HUB WEBHOOK ---
+    try {
+      fetch("https://kirontech.com.br/api/webhooks/receive_ticket.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_id: 6, // Vepix ID
+          secret_key: "vepix_secret_key_2026!@#",
+          action: "increment",
+          count: 1
+        }),
+      }).catch(() => {});
+    } catch (e) {}
+    // -----------------------------
+
     revalidatePath("/dashboard/support");
     return { success: true, ticketId: ticket.id };
   } catch (error) {
