@@ -59,7 +59,7 @@ export async function createTicket(formData: FormData) {
 
     // --- KIRONTECH HUB WEBHOOK ---
     try {
-      fetch("https://kirontech.com.br/api/webhooks/receive_ticket.php", {
+      await fetch("https://kirontech.com.br/api/webhooks/receive_ticket.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,7 +68,7 @@ export async function createTicket(formData: FormData) {
           action: "increment",
           count: 1
         }),
-      }).catch(() => {});
+      });
     } catch (e) {}
     // -----------------------------
 
