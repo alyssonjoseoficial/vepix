@@ -182,3 +182,53 @@ export async function createTenantManually(formData: FormData) {
   revalidatePath("/admin/tenants");
   return { success: true };
 }
+
+export async function extendTenantAccess(tenantId: string, days: number = 30) {
+  await requirePlatformAdmin();
+  
+  const tenant = await prisma.tenant.findUnique({ 
+    where: { id: tenantId },
+    include: { subscription: true }
+  });
+  
+  if (!tenant) return { error: "Loja não encontrada." };
+
+  const now = new Date();
+  let newEndDate = new Date();
+  
+  if (tenant.subscription?.currentPeriodEnd && tenant.subscription.currentPeriodEnd > now) {
+     newEndDate = new Date(tenant.subscription.currentPeriodEnd);
+  }
+  newEndDate.setDate(newEndDate.getDate() + days);
+
+  if (tenant.subscription) {
+    await prisma.subscription.update({
+      where: { id: tenant.subscription.id },
+      data: {
+        status: "ACTIVE",
+        currentPeriodEnd: newEndDate,
+      }
+    });
+  } else {
+    // Fallback if there is no subscription, which shouldn't happen normally
+    const starterPlan = await prisma.plan.findFirst();
+    if (starterPlan) {
+      await prisma.subscription.create({
+        data: {
+          tenantId: tenant.id,
+          planId: starterPlan.id,
+          status: "ACTIVE",
+          currentPeriodEnd: newEndDate,
+        }
+      });
+    }
+  }
+
+  // Also ensure tenant is active administratively
+  if (!tenant.active) {
+     await prisma.tenant.update({ where: { id: tenantId }, data: { active: true } });
+  }
+
+  revalidatePath("/admin/tenants");
+  revalidatePath(`/admin/tenants/${tenantId}`);
+}

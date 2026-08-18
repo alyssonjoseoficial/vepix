@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { requirePlatformAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
-import { Card, CardTitle, CardContent } from "@/components/ui/card";
-import { toggleTenantStatus } from "@/lib/actions/admin";
+import { Card, CardTitle } from "@/components/ui/card";
+import { toggleTenantStatus, extendTenantAccess } from "@/lib/actions/admin";
+import { getTenantBillingInfo } from "@/lib/billing";
+import Link from "next/link";
 
 export default async function AdminTenantDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await requirePlatformAdmin();
@@ -26,6 +28,7 @@ export default async function AdminTenantDetailPage({ params }: { params: Promis
   if (!tenant) notFound();
 
   const owner = tenant.members[0]?.user;
+  const billing = await getTenantBillingInfo(tenant.id);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -34,9 +37,9 @@ export default async function AdminTenantDetailPage({ params }: { params: Promis
           <h1 className="text-3xl font-bold text-slate-900">Ficha da Loja</h1>
           <p className="mt-1 text-sm text-slate-500">ID: {tenant.id}</p>
         </div>
-        <a href="/admin/tenants" className="text-sm font-semibold text-blue-600 hover:underline">
+        <Link href="/admin/tenants" className="text-sm font-semibold text-blue-600 hover:underline">
           &larr; Voltar para Lojas
-        </a>
+        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -120,6 +123,50 @@ export default async function AdminTenantDetailPage({ params }: { params: Promis
                   <p className="font-medium text-slate-900">{tenant.settings?.contactPhone || "N/A"}</p>
                 </div>
               </div>
+            </div>
+          </Card>
+
+          {/* Faturamento / Pagamento Manual */}
+          <Card className="border-blue-100 bg-blue-50/30">
+            <div className="p-6">
+              <CardTitle className="text-lg mb-4 text-slate-900">Faturamento & Acesso</CardTitle>
+              <div className="space-y-4 text-sm mb-4">
+                <div>
+                  <p className="text-slate-500 mb-1">Status da Assinatura</p>
+                  <p className="font-medium text-slate-900">
+                    {billing.status === "ACTIVE" && "Ativa"}
+                    {billing.status === "TRIAL" && "Trial"}
+                    {billing.status === "WARNING" && "Aviso (Vencendo)"}
+                    {billing.status === "PAST_DUE" && "Atrasada"}
+                    {billing.status === "BLOCKED" && "Bloqueada (Inadimplente)"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-slate-500 mb-1">Vencimento do Plano</p>
+                  <p className="font-medium text-slate-900">
+                    {billing.status === "TRIAL" 
+                      ? billing.trialEndsAt.toLocaleDateString("pt-BR") 
+                      : billing.currentPeriodEnd 
+                        ? billing.currentPeriodEnd.toLocaleDateString("pt-BR") 
+                        : "N/A"}
+                  </p>
+                </div>
+              </div>
+              
+              <form action={async () => {
+                "use server";
+                await extendTenantAccess(tenant.id, 30);
+              }}>
+                <button 
+                  type="submit"
+                  className="w-full py-2.5 px-4 rounded-md text-sm font-semibold text-white shadow-sm transition-colors bg-blue-600 hover:bg-blue-500"
+                >
+                  Registrar Pagamento Manual (+30 dias)
+                </button>
+              </form>
+              <p className="text-xs text-slate-500 mt-2">
+                Use este botão para liberar a loja caso o cliente tenha pago por fora (ex: dinheiro ou PIX manual). Isso adicionará 30 dias de acesso.
+              </p>
             </div>
           </Card>
 
