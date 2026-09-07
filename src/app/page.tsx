@@ -621,16 +621,19 @@ export default async function HomePage() {
 
       {/* FOOTER */}
       <footer className="border-t border-slate-800/80 bg-slate-950 py-12">
-        <div className="mx-auto max-w-7xl px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
+        <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
             <img
               src="/vepix_logo_LP.png"
               alt="VePix"
               className="h-10 w-auto object-contain opacity-80"
             />
+            <span className="text-xs text-slate-400">
+              Ecossistema Kiron Tech • Atendimento: (79) 99678-1719
+            </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
             <a href="#como-funciona" className="hover:text-white transition-colors">
               Como Funciona
             </a>
@@ -642,6 +645,15 @@ export default async function HomePage() {
             </a>
             <a href="#faq" className="hover:text-white transition-colors">
               Dúvidas
+            </a>
+            <a
+              href="https://wa.me/5579996781719?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20o%20atendimento%20do%20VePix."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              WhatsApp: (79) 99678-1719
             </a>
             <Link href="/login" className="hover:text-white transition-colors">
               Painel do Lojista
